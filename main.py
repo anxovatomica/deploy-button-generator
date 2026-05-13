@@ -43,7 +43,7 @@ class GenerateResponse(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 async def landing_page(request: Request):
     """Landing page with the web UI form."""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html", {})
 
 @app.post("/api/generate")
 async def api_generate(request: GenerateRequest):
@@ -66,15 +66,9 @@ async def web_generate(request: Request, repo_url: str = Form(...)):
     """
     try:
         result = process_repo(repo_url)
-        return templates.TemplateResponse("result.html", {
-            "request": request,
-            **result
-        })
+        return templates.TemplateResponse(request, "result.html", result)
     except Exception as e:
-        return templates.TemplateResponse("error.html", {
-            "request": request,
-            "error": str(e)
-        })
+        return templates.TemplateResponse(request, "error.html", {"error": str(e)})
 
 def process_repo(repo_url: str) -> dict:
     """
