@@ -4,6 +4,8 @@
 
 Paste a GitHub repo URL → get `Dockerfile` + `render.yaml` + a one-click **"Deploy to Render"** badge.
 
+**🌐 Live Demo:** http://43.98.167.138:8002
+
 No auth. No config. Just paste and copy-paste.
 
 ---
