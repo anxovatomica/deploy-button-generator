@@ -1,5 +1,7 @@
 # 🚀 Deploy This Button Generator
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/anxovatomica/deploy-button-generator)
+
 Paste a GitHub repo URL → get `Dockerfile` + `render.yaml` + a one-click **"Deploy to Render"** badge.
 
 No auth. No config. Just paste and copy-paste.
