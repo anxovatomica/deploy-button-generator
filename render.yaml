@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: deploy-button-generator
+    runtime: docker
+    repo: https://github.com/anxovatomica/deploy-button-generator
+    branch: main
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000
+    healthCheckPath: /
+    autoDeploy: true

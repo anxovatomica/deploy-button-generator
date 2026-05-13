@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Config — {{ stack.title() }} Stack</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 900px;
+            width: 95%;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .header .repo-url {
+            color: #00f5ff;
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+        .header .detected {
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: rgba(0,245,255,0.15);
+            border: 1px solid rgba(0,245,255,0.3);
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00f5ff, #7b2dff);
+            border-color: transparent;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,0.2); }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active { display: block; }
+        .panel-card {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+        }
+        .panel-card h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #a0a0c0;
+        }
+        pre {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #e0e0ff;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: rgba(0,245,255,0.2);
+            border-color: #00f5ff;
+        }
+        .badge-preview {
+            text-align: center;
+            padding: 30px;
+        }
+        .badge-preview img { max-width: 200px; }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.2); }
+        .command-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .command-box {
+            background: rgba(0,245,255,0.05);
+            border: 1px solid rgba(0,245,255,0.15);
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .command-box label {
+            display: block;
+            font-size: 0.75rem;
+            color: #00f5ff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .command-box code {
+            font-size: 0.85rem;
+            color: #e0e0ff;
+        }
+        @media (max-width: 600px) {
+            .command-info { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ stack.title() }} Stack Detected</h1>
+            <p class="repo-url">{{ repo_url }}</p>
+            <div class="detected">
+                Files: {{ detected_files | join(', ') }}
+            </div>
+        </div>
+
+        {% if build_command or start_command %}
+        <div class="command-info">
+            {% if build_command %}
+            <div class="command-box">
+                <label>Build Command</label>
+                <code>{{ build_command }}</code>
+            </div>
+            {% endif %}
+            {% if start_command %}
+            <div class="command-box">
+                <label>Start Command</label>
+                <code>{{ start_command }}</code>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dockerfile')">Dockerfile</button>
+            <button class="tab-btn" onclick="switchTab('render')">render.yaml</button>
+            <button class="tab-btn" onclick="switchTab('badge')">Deploy Badge</button>
+        </div>
+
+        <div id="dockerfile" class="tab-panel active">
+            <div class="panel-card">
+                <h3>Dockerfile — Copy into your repo root</h3>
+                <button class="copy-btn" onclick="copyToClipboard('dockerfile-code')">Copy</button>
+                <pre id="dockerfile-code">{{ dockerfile }}</pre>
+            </div>
+        </div>
+
+        <div id="render" class="tab-panel">
+            <div class="panel-card">
+                <h3>render.yaml — Render.com deploy config</h3>
+                <button class="copy-btn" onclick="copyToClipboard('render-code')">Copy</button>
+                <pre id="render-code">{{ render_yaml }}</pre>
+            </div>
+        </div>
+
+        <div id="badge" class="tab-panel">
+            <div class="panel-card">
+                <h3>Markdown — Paste into your README.md</h3>
+                <button class="copy-btn" onclick="copyToClipboard('badge-md')">Copy</button>
+                <pre id="badge-md">{{ badge_markdown }}</pre>
+            </div>
+            <div class="panel-card" style="margin-top: 16px;">
+                <h3>HTML — Paste into your index.html or docs</h3>
+                <button class="copy-btn" onclick="copyToClipboard('badge-html')">Copy</button>
+                <pre id="badge-html">{{ badge_html }}</pre>
+            </div>
+            <div class="panel-card badge-preview" style="margin-top: 16px;">
+                <h3 style="text-align:left;margin-bottom:20px;">Preview</h3>
+                <a href="https://render.com/deploy?repo={{ repo_url | urlencode }}">
+                    <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" width="180">
+                </a>
+            </div>
+        </div>
+
+        <div style="text-align:center">
+            <a href="/" class="back-link">Generate Another</a>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+        }
+    </script>
+</body>
+</html>
