@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deploy Button Generator — From GitHub to Live in 30 Seconds</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --surface: #16161f;
+  --surface2: #1c1c26;
+  --text: #e8e8f0;
+  --text2: #9090a8;
+  --accent: #10b981;
+  --accent2: #34d399;
+  --accent3: #059669;
+  --border: #252535;
+  --purple: #8b5cf6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+nav .container { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-weight: 800; font-size: 1.3rem; color: var(--text); }
+.logo span { color: var(--accent); }
+.nav-links a { color: var(--text2); text-decoration: none; margin-left: 32px; font-size: 0.9rem; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+
+.hero { padding: 100px 0 80px; text-align: center; }
+.hero h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+.hero h1 span { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 1.25rem; color: var(--text2); max-width: 640px; margin: 0 auto 40px; }
+.cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent3), var(--accent));
+  color: white;
+  box-shadow: 0 4px 24px rgba(16, 185, 129, 0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4); }
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--surface2); }
+
+/* DEMO */
+.demo-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 680px;
+  margin: 60px auto 0;
+  text-align: left;
+}
+.demo-box h4 { color: var(--text2); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.demo-step { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.demo-step:last-child { border-bottom: none; }
+.step-icon { width: 40px; height: 40px; background: var(--bg2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.demo-step div { font-size: 0.95rem; }
+.demo-step strong { color: var(--text); }
+.demo-step span { color: var(--text2); }
+
+/* PROOF */
+.social { padding: 60px 0; text-align: center; border-top: 1px solid var(--border); }
+.social h3 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text2); margin-bottom: 40px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.stat h4 { font-size: 2.5rem; font-weight: 700; color: var(--accent2); }
+.stat p { color: var(--text2); font-size: 0.9rem; margin-top: 4px; }
+
+/* FEATURES */
+.features { padding: 80px 0; }
+.features h2 { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+.features h2 span { color: var(--accent); }
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.2s;
+}
+.feature-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.feature-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--accent3), var(--accent));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin-bottom: 20px;
+}
+.feature-card h3 { font-size: 1.15rem; margin-bottom: 12px; }
+.feature-card p { color: var(--text2); font-size: 0.9rem; }
+
+/* STACKS */
+.stacks { padding: 80px 0; background: var(--bg2); }
+.stacks h2 { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+.stack-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stack-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.stack-card:hover { border-color: var(--accent); }
+
+/* HOW */
+.how { padding: 80px 0; }
+.how h2 { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.step { text-align: center; }
+.step-num {
+  width: 56px; height: 56px;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 700; color: var(--accent);
+  margin: 0 auto 20px;
+}
+.step h3 { margin-bottom: 12px; }
+.step p { color: var(--text2); font-size: 0.95rem; }
+
+/* CTA */
+.cta-section {
+  padding: 100px 0;
+  text-align: center;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  border-top: 1px solid var(--border);
+}
+.cta-section h2 { font-size: 2.5rem; margin-bottom: 20px; }
+.cta-section p { color: var(--text2); font-size: 1.1rem; margin-bottom: 40px; }
+
+/* FOOTER */
+footer { padding: 40px 0; text-align: center; color: var(--text2); font-size: 0.85rem; border-top: 1px solid var(--border); }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.2rem; }
+  .feature-grid, .steps, .stack-grid, .stats { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo">Deploy <span>Button</span> Generator</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#stacks">Stacks</a>
+      <a href="https://github.com/anxovatomica/deploy-button-generator">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>From GitHub Repo<br>to <span>Live in 30 Seconds</span></h1>
+    <p>Paste any public GitHub URL. We auto-detect your stack, generate a Dockerfile and render.yaml, and hand you a "Deploy to Render" badge. Zero config. Zero guessing.</p>
+    <div class="cta-group">
+      <a href="https://github.com/anxovatomica/deploy-button-generator" class="btn btn-primary">Try It Free</a>
+      <a href="#features" class="btn btn-secondary">See It Work</a>
+    </div>
+    <div class="demo-box">
+      <h4>What you get in 30 seconds</h4>
+      <div class="demo-step">
+        <div class="step-icon">📋</div>
+        <div><strong>Stack Detected:</strong> <span>Python · FastAPI · requirements.txt</span></div>
+      </div>
+      <div class="demo-step">
+        <div class="step-icon">🐳</div>
+        <div><strong>Dockerfile Generated:</strong> <span>Multi-stage, optimized, ready to build</span></div>
+      </div>
+      <div class="demo-step">
+        <div class="step-icon">⚙️</div>
+        <div><strong>render.yaml Created:</strong> <span>Build command, start command, env vars</span></div>
+      </div>
+      <div class="demo-step">
+        <div class="step-icon">🏷️</div>
+        <div><strong>README Badge:</strong> <span>"Deploy to Render" markdown + HTML snippet</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="social">
+  <div class="container">
+    <h3>Works with everything you already use</h3>
+    <div class="stats">
+      <div class="stat"><h4>6+</h4><p>Stacks Supported</p></div>
+      <div class="stat"><h4>∞</h4><p>Public Repos</p></div>
+      <div class="stat"><h4>30s</h4><p>Per Generation</p></div>
+      <div class="stat"><h4>$0</h4><p>To Get Started</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="container">
+    <h2>Why maintainers love <span>Deploy Button Generator</span></h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Smart Stack Detection</h3>
+        <p>Reads package.json, requirements.txt, go.mod, Cargo.toml, Gemfile, and more. Knows Next.js from Express, FastAPI from Flask.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐳</div>
+        <h3>Production Dockerfiles</h3>
+        <p>Not bare-bones templates. Multi-stage builds for Go and Rust. Optimized layers for Node and Python. Ready for production.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏷️</div>
+        <h3>README Badge Ready</h3>
+        <p>Copy-paste markdown or HTML. Users click the badge → Render asks for repo → deploys. You get stars, they get a running app.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>render.yaml Included</h3>
+        <p>Build commands, start commands, and env var placeholders. Render reads it and knows exactly what to do. No manual setup.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Web UI + API</h3>
+        <p>Pretty dark-themed form for browser users. REST API for automation and CI pipelines. JSON in, deploy configs out.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔓</div>
+        <h3>No Auth Needed</h3>
+        <p>Works with any public GitHub repo. No API keys required. Clone and run locally, or deploy the app itself to Render.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stacks" id="stacks">
+  <div class="container">
+    <h2>Stacks we speak fluently</h2>
+    <div class="stack-grid">
+      <div class="stack-card">Node.js<br><span style="color:var(--text2);font-size:0.8rem;">Next.js, Express, Nuxt</span></div>
+      <div class="stack-card">Python<br><span style="color:var(--text2);font-size:0.8rem;">FastAPI, Flask, Django</span></div>
+      <div class="stack-card">Go<br><span style="color:var(--text2);font-size:0.8rem;">Multi-stage builds</span></div>
+      <div class="stack-card">Rust<br><span style="color:var(--text2);font-size:0.8rem;">Multi-stage builds</span></div>
+      <div class="stack-card">Ruby<br><span style="color:var(--text2);font-size:0.8rem;">Rails, Sinatra</span></div>
+      <div class="stack-card">Static<br><span style="color:var(--text2);font-size:0.8rem;">nginx, SPA routing</span></div>
+      <div class="stack-card">Docker<br><span style="color:var(--text2);font-size:0.8rem;">Pass-through existing</span></div>
+      <div class="stack-card">+ More Soon<br><span style="color:var(--text2);font-size:0.8rem;">Java, PHP, .NET</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="container">
+    <h2>Three steps to deployable</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Paste Repo URL</h3>
+        <p>Any public GitHub repository. We fetch the file list and read the key config files instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>We Generate Everything</h3>
+        <p>Dockerfile, render.yaml, and README badge. Optimized for your specific stack and framework.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Copy & Paste</h3>
+        <p>Copy the configs into your repo. Add the badge to README. Your users deploy with one click.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <h2>Your users should deploy, not debug.</h2>
+    <p>Free. Open source. Ready in 30 seconds.</p>
+    <a href="https://github.com/anxovatomica/deploy-button-generator" class="btn btn-primary">Generate Your Deploy Button</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Built by <a href="https://github.com/anxovatomica" style="color:var(--accent); text-decoration:none;">@anxovatomica</a> · Open source on GitHub · Also check out <a href="https://github.com/anxovatomica/ai-api-router" style="color:var(--accent2); text-decoration:none;">AI API Router</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
