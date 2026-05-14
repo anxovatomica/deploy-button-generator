@@ -10,3 +10,6 @@ services:
         value: 8000
     healthCheckPath: /
     autoDeploy: true
+    # Render Blueprint — auto-generate Dockerfile + deploy badge for any GitHub repo
+    # Features: Stack detection, Dockerfile generation, render.yaml generation, one-click deploy
+    # Tech: Python, FastAPI, Docker, GitHub API
